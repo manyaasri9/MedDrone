@@ -43,6 +43,12 @@ body {
     gap: 20px;
 }
 
+.brand-logo {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+}
+
 .logo {
     font-weight: 700;
     font-size: 1.5rem;
@@ -267,6 +273,7 @@ body {
 .emergency-panel {
     flex: 1.2;
     min-width: 240px;
+    align-self: flex-start;  
     background: linear-gradient(145deg, #ffffff, #f5f9ff);
     border-radius: 40px;
     padding: 28px 22px;
