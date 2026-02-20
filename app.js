@@ -95,7 +95,7 @@ const products = [
         desc: 'Reduce pain, fever & inflammation · 60 dissolving tablets', 
         price: 9.49, 
         icon: 'fas fa-moon', 
-        category: 'wellness',
+        category: 'medicine',
         image: "images/asprin.avif" 
     },
 
