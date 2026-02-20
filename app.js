@@ -1,17 +1,112 @@
 // Product database
 const products = [
-    { id: 1, name: 'Fat Burner Tablet', desc: 'Dr.Morepen · 60 tablets', price: 12.99, icon: 'fas fa-capsules', category: 'wellness' },
-    { id: 2, name: 'Omega-3 Fish Oil', desc: 'Deep sea fish oil · 1000mg', price: 15.99, icon: 'fas fa-fish', category: 'vitamins' },
-    { id: 3, name: 'Biotin+ Advanced', desc: 'Hair & skin health · 60 tablets', price: 11.99, icon: 'fas fa-bolt', category: 'wellness' },
-    { id: 4, name: 'Cod Liver Oil', desc: 'With Omega-3 · 500mg', price: 9.99, icon: 'fas fa-cod', category: 'vitamins' },
-    { id: 5, name: 'Multivitamin Men', desc: 'Advanced formula · 60 tablets', price: 13.99, icon: 'fas fa-droplet', category: 'vitamins' },
-    { id: 6, name: 'Emergency First Aid Kit', desc: 'Complete medical kit', price: 24.99, icon: 'fas fa-first-aid', category: 'emergency' },
-    { id: 7, name: 'Pain Relief Tablets', desc: 'Fast acting · 20 tablets', price: 8.99, icon: 'fas fa-pills', category: 'medicine' },
-    { id: 8, name: 'Antibiotics', desc: 'Prescription required · 10 tablets', price: 18.99, icon: 'fas fa-tablets', category: 'medicine' },
-    { id: 9, name: 'Vitamin D3', desc: '1000 IU · 60 capsules', price: 7.99, icon: 'fas fa-sun', category: 'vitamins' },
-    { id: 10, name: 'Blood Pressure Monitor', desc: 'Digital · Home use', price: 39.99, icon: 'fas fa-heartbeat', category: 'wellness' },
-    { id: 11, name: 'Insulin Syringes', desc: 'Emergency medical supplies', price: 14.99, icon: 'fas fa-syringe', category: 'emergency' },
-    { id: 12, name: 'Asthma Inhaler', desc: 'Emergency relief · Prescription', price: 22.99, icon: 'fas fa-lungs', category: 'medicine' }
+    { 
+        id: 1, 
+        name: 'Ibuprofen 400mg', 
+        desc: 'Pain reliever & anti-inflammatory · 50 tablets', 
+        price: 12.99, 
+        icon: 'fas fa-capsules', 
+        category: 'medicine' 
+    },
+
+    { 
+        id: 2, 
+        name: 'Paracetamol 500mg', 
+        desc: 'Fever reducer & pain relief · 60 tablets', 
+        price: 15.99, 
+        icon: 'fas fa-capsules', 
+        category: 'medicine' 
+    },
+
+    { 
+        id: 3, 
+        name: 'Vitamin C 1000mg', 
+        desc: 'Immune support · 30 effervescent tablets', 
+        price: 11.99, 
+        icon: 'fas fa-bolt', 
+        category: 'vitamins' 
+    },
+
+    { 
+        id: 4, 
+        name: 'Vitamin D3 2000IU', 
+        desc: 'Bone & immune health · 60 softgels', 
+        price: 14.99, 
+        icon: 'fas fa-sun', 
+        category: 'vitamins' 
+    },
+
+    { 
+        id: 5, 
+        name: 'DayQuil Cold & Flu', 
+        desc: 'Non-drowsy flu relief · 24 capsules', 
+        price: 11.99, 
+        icon: 'fas fa-droplet', 
+        category: 'medicine' 
+    },
+
+    { 
+        id: 6, 
+        name: 'NyQuil Night Relief', 
+        desc: 'Nighttime cold relief · 24 capsules', 
+        price: 13.49, 
+        icon: 'fas fa-first-aid', 
+        category: 'medicine' 
+    },
+
+    { 
+        id: 7, 
+        name: 'Omega-3 Fish Oil', 
+        desc: 'Heart & brain health · 90 softgels', 
+        price: 19.99, 
+        icon: 'fas fa-fish', 
+        category: 'wellness' 
+    },
+
+    { 
+        id: 8, 
+        name: 'Probiotics 10B CFU', 
+        desc: 'Gut & digestive health · 60 capsules', 
+        price: 24.99, 
+        icon: 'fas fa-tablets', 
+        category: 'wellness' 
+    },
+
+    { 
+        id: 9, 
+        name: 'Zinc + Elderberry', 
+        desc: 'Immune booster · 60 gummies', 
+        price: 16.99, 
+        icon: 'fas fa-syringe', 
+        category: 'vitamins' 
+    },
+
+    { 
+        id: 10, 
+        name: 'Melatonin 5mg', 
+        desc: 'Sleep support · 60 dissolving tablets', 
+        price: 9.49, 
+        icon: 'fas fa-moon', 
+        category: 'wellness' 
+    },
+
+    { 
+        id: 11, 
+        name: 'Emergency Trauma Kit', 
+        desc: 'Bandages, antiseptics, gloves & medical tools', 
+        price: 34.99, 
+        icon: 'fas fa-briefcase-medical', 
+        category: 'emergency' 
+    },
+
+    { 
+        id: 12, 
+        name: 'Allergy Relief Kit', 
+        desc: 'Antihistamine tablets & sterile wipes', 
+        price: 18.99, 
+        icon: 'fas fa-allergies', 
+        category: 'emergency' 
+    }
 ];
 
 let currentCategory = 'all';
