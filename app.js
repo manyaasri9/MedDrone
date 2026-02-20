@@ -15,7 +15,8 @@ const products = [
         desc: 'Fever reducer & pain relief · 60 tablets', 
         price: 15.99, 
         icon: 'fas fa-capsules', 
-        category: 'medicine' 
+        category: 'medicine',
+        image: "images/ibuprofen.jpg" 
     },
 
     { 
@@ -24,7 +25,8 @@ const products = [
         desc: 'Immune support · 30 effervescent tablets', 
         price: 11.99, 
         icon: 'fas fa-bolt', 
-        category: 'vitamins' 
+        category: 'vitamins',
+        image: "images/ibuprofen.jpg" 
     },
 
     { 
@@ -33,7 +35,8 @@ const products = [
         desc: 'Bone & immune health · 60 softgels', 
         price: 14.99, 
         icon: 'fas fa-sun', 
-        category: 'vitamins' 
+        category: 'vitamins',
+        image: "images/ibuprofen.jpg" 
     },
 
     { 
@@ -42,7 +45,8 @@ const products = [
         desc: 'Non-drowsy flu relief · 24 capsules', 
         price: 11.99, 
         icon: 'fas fa-droplet', 
-        category: 'medicine' 
+        category: 'medicine',
+        image: "images/ibuprofen.jpg" 
     },
 
     { 
@@ -51,7 +55,8 @@ const products = [
         desc: 'Nighttime cold relief · 24 capsules', 
         price: 13.49, 
         icon: 'fas fa-first-aid', 
-        category: 'medicine' 
+        category: 'medicine',
+        image: "images/ibuprofen.jpg" 
     },
 
     { 
@@ -60,7 +65,8 @@ const products = [
         desc: 'Heart & brain health · 90 softgels', 
         price: 19.99, 
         icon: 'fas fa-fish', 
-        category: 'wellness' 
+        category: 'wellness',
+        image: "images/ibuprofen.jpg" 
     },
 
     { 
@@ -69,7 +75,8 @@ const products = [
         desc: 'Gut & digestive health · 60 capsules', 
         price: 24.99, 
         icon: 'fas fa-tablets', 
-        category: 'wellness' 
+        category: 'wellness',
+        image: "images/ibuprofen.jpg" 
     },
 
     { 
@@ -78,7 +85,8 @@ const products = [
         desc: 'Immune booster · 60 gummies', 
         price: 16.99, 
         icon: 'fas fa-syringe', 
-        category: 'vitamins' 
+        category: 'vitamins',
+        image: "images/ibuprofen.jpg" 
     },
 
     { 
@@ -87,7 +95,8 @@ const products = [
         desc: 'Sleep support · 60 dissolving tablets', 
         price: 9.49, 
         icon: 'fas fa-moon', 
-        category: 'wellness' 
+        category: 'wellness',
+        image: "images/ibuprofen.jpg" 
     },
 
     { 
@@ -96,7 +105,8 @@ const products = [
         desc: 'Bandages, antiseptics & gloves', 
         price: 34.99, 
         icon: 'fas fa-briefcase-medical', 
-        category: 'emergency' 
+        category: 'emergency',
+        image: "images/firstaid.png"
     },
 
     { 
@@ -105,7 +115,8 @@ const products = [
         desc: 'Antihistamine tablets & sterile wipes', 
         price: 18.99, 
         icon: 'fas fa-allergies', 
-        category: 'emergency' 
+        category: 'emergency',
+        image: "images/ibuprofen.jpg" 
     }
 ];
 
