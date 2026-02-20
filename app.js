@@ -17,6 +17,7 @@ const products = [
 let currentCategory = 'all';
 let searchQuery = '';
 let priorityQueueCount = 0;
+let emergencyActivated = false;
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
@@ -144,27 +145,43 @@ function updateCartCount() {
 }
 
 function handleEmergency() {
-    priorityQueueCount++;
-    
-    const queueBadge = document.getElementById('queueCount');
-    if (queueBadge) {
-        const queueNumber = document.getElementById('queueNumber');
-        if (queueNumber) {
-            queueNumber.textContent = priorityQueueCount;
-        }
+
+    // 🚫 Prevent multiple activations
+    if (emergencyActivated) {
+        showToast('⚠️ Emergency already activated!', 'emergency');
+        return;
+    }
+
+    emergencyActivated = true;  // mark as activated
+    priorityQueueCount = 1;     // ensure it's only 1
+
+    const queueNumber = document.getElementById('queueNumber');
+    if (queueNumber) {
+        queueNumber.textContent = priorityQueueCount;
     }
 
     const queueStatus = document.getElementById('queueStatus');
     if (queueStatus) {
-        queueStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Emergency request added to priority queue';
+        queueStatus.innerHTML =
+            '<i class="fas fa-exclamation-circle"></i> Emergency request added to priority queue';
     }
 
     showToast('🚑 EMERGENCY: Priority dispatch activated!', 'emergency');
-    
+
+    // Disable button visually
+    const emergencyBtn = document.getElementById('emergencyBtn');
+    if (emergencyBtn) {
+        emergencyBtn.disabled = true;
+        emergencyBtn.style.opacity = "0.6";
+        emergencyBtn.style.cursor = "not-allowed";
+        emergencyBtn.innerHTML = '<i class="fas fa-check"></i> ACTIVE';
+    }
+
     // Update AI status
     const aiStatus = document.querySelector('.emergency-panel p[style*="margin-top:14px"]');
     if (aiStatus) {
-        aiStatus.innerHTML = '<i class="fas fa-satellite-dish"></i> AI: Emergency route calculated · fastest path selected';
+        aiStatus.innerHTML =
+            '<i class="fas fa-satellite-dish"></i> AI: Emergency route calculated · fastest path selected';
     }
 }
 
