@@ -5,7 +5,6 @@ const products = [
         name: 'Ibuprofen 400mg', 
         desc: 'Pain reliever & anti-inflammatory · 50 tablets', 
         price: 12.99, 
-        icon: 'fas fa-capsules', 
         category: 'medicine',
         image: "images/ibuprofen.jpg"
     },
