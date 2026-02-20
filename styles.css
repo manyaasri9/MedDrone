@@ -43,6 +43,12 @@ body {
     gap: 20px;
 }
 
+.brand-logo {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+}
+
 .logo {
     font-weight: 700;
     font-size: 1.5rem;

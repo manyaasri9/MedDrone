@@ -23,12 +23,24 @@
         }
 
         .signin-header .logo {
-            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .signin-header .logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        .signin-header .logo-text {
+            font-size: 1.5rem;
             font-weight: 700;
             background: linear-gradient(135deg, #004e9e, #0066cc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
         }
 
         .signin-header h1 {
@@ -179,7 +191,10 @@
         </a> -->
 
         <div class="signin-header">
-            <div class="logo"><i class="fas fa-helicopter"></i> MedDrone Connect</div>
+            <div class="logo">
+                <img src="./logo.png" alt="MedDrone Connect Logo">
+                <span class="logo-text">MedDrone Connect</span>
+            </div>
             <h1>Welcome Back</h1>
             <p>Sign in to order your</p>
         </div>
