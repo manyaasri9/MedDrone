@@ -6,7 +6,8 @@ const products = [
         desc: 'Pain reliever & anti-inflammatory · 50 tablets', 
         price: 12.99, 
         icon: 'fas fa-capsules', 
-        category: 'medicine' 
+        category: 'medicine',
+        image: "images/ibuprofen.jpg"
     },
 
     { 
@@ -92,8 +93,8 @@ const products = [
 
     { 
         id: 11, 
-        name: 'Emergency Trauma Kit', 
-        desc: 'Bandages, antiseptics, gloves & medical tools', 
+        name: 'Emergency Kit', 
+        desc: 'Bandages, antiseptics & gloves', 
         price: 34.99, 
         icon: 'fas fa-briefcase-medical', 
         category: 'emergency' 
@@ -227,17 +228,19 @@ function loadProducts() {
     }
 
     // Render products
-    productGrid.innerHTML = filteredProducts.map(product => `
-        <div class="product-card">
-            <div class="product-icon"><i class="${product.icon}"></i></div>
-            <div class="product-title">${product.name}</div>
-            <div class="product-desc">${product.desc}</div>
-            <div class="product-price">$${product.price.toFixed(2)}</div>
-            <button class="order-btn" onclick="addToCart(${product.id})">
-                <i class="fas fa-cart-plus"></i> Add to Cart
-            </button>
-        </div>
-    `).join('');
+productGrid.innerHTML = filteredProducts.map(product => `
+    <div class="product-card">
+        ${product.image ? `<img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` 
+                       : `<div class="product-icon"><i class="${product.icon}"></i></div>`}
+        <div class="product-icon" style="display:none;"><i class="${product.icon}"></i></div>
+        <div class="product-title">${product.name}</div>
+        <div class="product-desc">${product.desc}</div>
+        <div class="product-price">$${product.price.toFixed(2)}</div>
+        <button class="order-btn" onclick="addToCart(${product.id})">
+            <i class="fas fa-cart-plus"></i> Add to Cart
+        </button>
+    </div>
+`).join('');
 
     if (filteredProducts.length === 0) {
         productGrid.innerHTML = `
