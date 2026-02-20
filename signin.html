@@ -174,14 +174,14 @@
 </head>
 <body>
     <div class="signin-container">
-        <a href="index.html" class="back-link">
+        <!-- <a href="index.html" class="back-link">
             <i class="fas fa-arrow-left"></i> Back to Home
-        </a>
+        </a> -->
 
         <div class="signin-header">
             <div class="logo"><i class="fas fa-helicopter"></i> MedDrone Connect</div>
             <h1>Welcome Back</h1>
-            <p>Sign in to access your account</p>
+            <p>Sign in to order your medicine</p>
         </div>
 
         <form id="signinForm">
@@ -200,16 +200,16 @@
             </button>
         </form>
 
-        <div class="divider">or</div>
+        <!-- <div class="divider">or</div> -->
 
-        <button class="guest-btn" onclick="continueAsGuest()">
+        <!-- <button class="guest-btn" onclick="continueAsGuest()">
             <i class="fas fa-user-circle"></i> Continue as Guest
-        </button>
+        </button> -->
 
-        <div class="demo-note">
+        <!-- <div class="demo-note">
             <i class="fas fa-info-circle"></i>
             <strong>Demo Mode:</strong> For K-12 demonstrations, you can continue as guest or use any email/password to explore the system.
-        </div>
+        </div> -->
     </div>
 
     <div id="toast" class="toast-msg"></div>
@@ -226,13 +226,13 @@
             }, 3000);
         }
 
-        function continueAsGuest() {
-            localStorage.setItem('user', JSON.stringify({ name: 'Guest', email: 'guest@meddrone.com' }));
-            showToast('✓ Signed in as Guest', 'success');
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 1000);
-        }
+        // function continueAsGuest() {
+        //     localStorage.setItem('user', JSON.stringify({ name: 'Guest', email: 'guest@meddrone.com' }));
+        //     showToast('✓ Signed in as Guest', 'success');
+        //     setTimeout(() => {
+        //         window.location.href = 'index.html';
+        //     }, 1000);
+        // }
 
         document.getElementById('signinForm').addEventListener('submit', (e) => {
             e.preventDefault();
