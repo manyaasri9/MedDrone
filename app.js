@@ -16,7 +16,7 @@ const products = [
         price: 15.99, 
         icon: 'fas fa-capsules', 
         category: 'medicine',
-        image: "images/ibuprofen.jpg" 
+        image: "images/para.jpg" 
     },
 
     { 
@@ -26,7 +26,7 @@ const products = [
         price: 11.99, 
         icon: 'fas fa-bolt', 
         category: 'vitamins',
-        image: "images/ibuprofen.jpg" 
+        image: "images/vitaminc.jpg" 
     },
 
     { 
@@ -36,7 +36,7 @@ const products = [
         price: 14.99, 
         icon: 'fas fa-sun', 
         category: 'vitamins',
-        image: "images/ibuprofen.jpg" 
+        image: "images/vitamind3.jpg" 
     },
 
     { 
@@ -46,7 +46,7 @@ const products = [
         price: 11.99, 
         icon: 'fas fa-droplet', 
         category: 'medicine',
-        image: "images/ibuprofen.jpg" 
+        image: "images/dayquil.png" 
     },
 
     { 
@@ -56,7 +56,7 @@ const products = [
         price: 13.49, 
         icon: 'fas fa-first-aid', 
         category: 'medicine',
-        image: "images/ibuprofen.jpg" 
+        image: "images/nyquil.png" 
     },
 
     { 
@@ -66,7 +66,7 @@ const products = [
         price: 19.99, 
         icon: 'fas fa-fish', 
         category: 'wellness',
-        image: "images/ibuprofen.jpg" 
+        image: "images/omega3.jpg" 
     },
 
     { 
@@ -76,27 +76,27 @@ const products = [
         price: 24.99, 
         icon: 'fas fa-tablets', 
         category: 'wellness',
-        image: "images/ibuprofen.jpg" 
+        image: "images/probiotic.jpg" 
     },
 
     { 
         id: 9, 
-        name: 'Zinc + Elderberry', 
+        name: 'Zinc', 
         desc: 'Immune booster · 60 gummies', 
         price: 16.99, 
         icon: 'fas fa-syringe', 
         category: 'vitamins',
-        image: "images/ibuprofen.jpg" 
+        image: "images/zinc.jpg" 
     },
 
     { 
         id: 10, 
-        name: 'Melatonin 5mg', 
-        desc: 'Sleep support · 60 dissolving tablets', 
+        name: 'Asprin', 
+        desc: 'Reduce pain, fever & inflammation · 60 dissolving tablets', 
         price: 9.49, 
         icon: 'fas fa-moon', 
         category: 'wellness',
-        image: "images/ibuprofen.jpg" 
+        image: "images/asprin.avif" 
     },
 
     { 
@@ -116,7 +116,7 @@ const products = [
         price: 18.99, 
         icon: 'fas fa-allergies', 
         category: 'emergency',
-        image: "images/ibuprofen.jpg" 
+        image: "images/allergy.jpg" 
     }
 ];
 
