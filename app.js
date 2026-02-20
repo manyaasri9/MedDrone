@@ -135,14 +135,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function checkUser() {
     const user = localStorage.getItem('user');
+    const signInLink = document.getElementById('signInLink');
+    const userDropdown = document.getElementById('userDropdown');
+    
     if (user) {
         const userData = JSON.parse(user);
-        const signInLink = document.querySelector('.sign-in-link');
         if (signInLink) {
-            signInLink.innerHTML = `<i class="fas fa-user"></i> ${userData.name}`;
+            signInLink.innerHTML = `<i class="fas fa-user"></i> ${userData.name} <i class="fas fa-chevron-down"></i>`;
             signInLink.href = '#';
+            
+            // Show dropdown on click
+            signInLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                userDropdown.classList.toggle('show');
+            });
+            
+            // Setup sign out button
+            const signOutBtn = document.getElementById('signOutBtn');
+            if (signOutBtn) {
+                signOutBtn.addEventListener('click', signOut);
+            }
+        }
+    } else {
+        // User not signed in
+        if (userDropdown) {
+            userDropdown.classList.remove('show');
         }
     }
+}
+
+function signOut(e) {
+    if (e) e.preventDefault();
+    
+    // Clear user data
+    localStorage.removeItem('user');
+    
+    // Show confirmation
+    showToast('Signed out successfully');
+    
+    // Redirect to home or refresh
+    setTimeout(() => {
+        window.location.reload();
+    }, 1000);
 }
 
 function setupEventListeners() {
@@ -217,6 +251,16 @@ function disableEmergency(btn) {
 
 // Run on load
 initEmergencyBtn();
+
+    // Close user dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        const userMenu = document.getElementById('userMenu');
+        const userDropdown = document.getElementById('userDropdown');
+        
+        if (userMenu && userDropdown && !userMenu.contains(e.target)) {
+            userDropdown.classList.remove('show');
+        }
+    });
 }
 
 function loadProducts() {
@@ -264,6 +308,13 @@ productGrid.innerHTML = filteredProducts.map(product => `
 }
 
 function addToCart(productId) {
+    // Check if user is signed in
+    const user = localStorage.getItem('user');
+    if (!user) {
+        showToast('⚠️ Please sign in to add items to your cart', 'warning');
+        return;
+    }
+
     const product = products.find(p => p.id === productId);
     if (!product) return;
 
@@ -349,6 +400,9 @@ function showToast(message, type = 'info') {
     if (type === 'emergency') {
         toast.style.background = '#b91c1c';
         toast.style.borderColor = '#ffd966';
+    } else if (type === 'warning') {
+        toast.style.background = '#ff9800';
+        toast.style.borderColor = '#ffd54f';
     } else {
         toast.style.background = '#14283e';
         toast.style.borderColor = 'gold';

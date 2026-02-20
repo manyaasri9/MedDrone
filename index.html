@@ -15,11 +15,16 @@
 
                 <img src="images/logo.png" class="product-image" alt="MedDrone Logo" />
                 <span class="logo"> MedDrone Connect
-                <br> Delivering life-saving medicine in minutes using AI-powered drones </span>
+                <br> Healthcare Flown to Every Corner </span>
   
             </div>
             <div class="header-actions">
-                <a href="signin.html" class="sign-in-link"><i class="fas fa-user"></i> Sign In</a>
+                <div class="user-menu" id="userMenu">
+                    <a href="signin.html" class="sign-in-link" id="signInLink"><i class="fas fa-user"></i> Sign In</a>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="#" class="dropdown-item" id="signOutBtn"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+                    </div>
+                </div>
                 <a href="checkout.html" class="cart-link" id="cartLink">
                     <i class="fas fa-shopping-cart"></i> Cart <span class="cart-count" id="cartCount">0</span>
                 </a>
