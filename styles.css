@@ -488,3 +488,50 @@ body {
         min-width: 100%;
     }
 }
+/* About Page */
+.about-container {
+    padding: 50px 60px;
+    max-width: 900px;
+    margin: 0 auto;
+    color: #1f3a5f;
+    line-height: 1.7;
+}
+
+.about-container h1 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    color: #004e9e;
+}
+
+.about-container h2 {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+    color: #14283e;
+}
+
+.about-container p {
+    margin-bottom: 14px;
+    font-size: 1rem;
+    color: #3f5680;
+}
+
+.about-container ul {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.about-container li {
+    margin-bottom: 8px;
+}
+
+.mission-quote {
+    margin: 20px 0;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, #ecf3ff, #ffffff);
+    border-left: 6px solid #004e9e;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #004e9e;
+}
