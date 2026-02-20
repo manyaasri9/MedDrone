@@ -16,7 +16,8 @@ const products = [
         desc: 'Fever reducer & pain relief · 60 tablets', 
         price: 15.99, 
         icon: 'fas fa-capsules', 
-        category: 'medicine' 
+        category: 'medicine',
+        image: "images" 
     },
 
     { 
