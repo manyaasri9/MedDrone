@@ -305,7 +305,7 @@
             <div class="map-section">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h3 style="color: #1f3a5f; margin: 0;">
-                        <i class="fas fa-map"></i> Route Map - ETA: <span class="timer" id="timer">14:00</span>
+                        <i class="fas fa-map"></i> Route Map - ETA: <span class="timer" id="timer">1:00</span>
                     </h3>
                     <button class="view-recording-btn" id="viewRecordingBtn">
                         <i class="fas fa-video"></i> View Live Feed
@@ -472,7 +472,7 @@
                 var coords = e.routes[0].coordinates;
                 allCoords = coords;
                 var totalSteps = coords.length;
-                var totalTime = 840000; // 14 minutes in milliseconds
+                var totalTime = 60000; // 14 minutes in milliseconds
                 var stepDuration = totalTime / totalSteps; // ms per step
 
                 // Store the animation function for use in simulation
@@ -506,7 +506,7 @@
 
         function startDeliverySimulation() {
             const interval = setInterval(() => {
-                progress += 0.12; // Complete in ~14 minutes (840 seconds = 84000 * 0.1 ms)
+                progress += 0.83; // Complete in ~14 minutes (840 seconds = 84000 * 0.1 ms)
                 
                 if (progress > 100) {
                     progress = 100;
@@ -602,7 +602,30 @@
 
         // Initialize on page load
         initTracking();
-        startTimer(14 * 60); // 14 minutes
+
+        startTimer(1 * 60); // 1 minute
+
+
+        // Recording modal functionality
+        const viewRecordingBtn = document.getElementById('viewRecordingBtn');
+        const recordingModal = document.getElementById('recordingModal');
+        const closeModal = document.getElementById('closeModal');
+
+        viewRecordingBtn.addEventListener('click', () => {
+            recordingModal.classList.add('active');
+        });
+
+        closeModal.addEventListener('click', () => {
+            recordingModal.classList.remove('active');
+        });
+
+        // Close modal when clicking outside
+        recordingModal.addEventListener('click', (e) => {
+            if (e.target === recordingModal) {
+                recordingModal.classList.remove('active');
+            }
+        });
+
     </script>
 </body>
 </html>
