@@ -239,6 +239,11 @@ body {
     color: #5c6f8f;
     margin-bottom: 12px;
 }
+.product-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover; 
+  }
 
 .product-price {
     font-weight: 700;
