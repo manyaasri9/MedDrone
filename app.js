@@ -59,11 +59,57 @@ function setupEventListeners() {
         });
     });
 
-    // Emergency button
+    // ===== EMERGENCY BUTTON =====
+function initEmergencyBtn() {
     const emergencyBtn = document.getElementById('emergencyBtn');
-    if (emergencyBtn) {
-        emergencyBtn.addEventListener('click', handleEmergency);
+    if (!emergencyBtn) return;
+
+    // Already activated? Disable immediately on page load
+    if (localStorage.getItem('emergency_activated')) {
+        disableEmergency(emergencyBtn);
+        return;
     }
+
+    emergencyBtn.addEventListener('click', function () {
+        if (localStorage.getItem('emergency_activated')) return; // double-safety
+
+        localStorage.setItem('emergency_activated', 'true');
+        localStorage.setItem('queue_priority', 'EMERGENCY');
+
+        disableEmergency(emergencyBtn);
+
+        // Update queue status text
+        document.getElementById('queueStatus').innerHTML =
+            '<i class="fas fa-bolt"></i> YOU ARE #1 — Drone dispatching now';
+
+        // Show toast
+        showToast('🚁 Emergency priority activated! You are #1 in queue.', 'error');
+    });
+}
+
+function disableEmergency(btn) {
+    btn.disabled = true;
+    btn.style.background = '#555';
+    btn.style.cursor = 'not-allowed';
+    btn.style.opacity = '0.6';
+    btn.innerHTML = '<i class="fas fa-check"></i> PRIORITY ACTIVATED';
+
+    // Add #1 badge below button
+    if (!document.getElementById('emergencyBadge')) {
+        const badge = document.createElement('div');
+        badge.id = 'emergencyBadge';
+        badge.style.cssText = `
+            background: #ff3b3b; color: white; font-size: 0.75rem;
+            font-weight: 700; padding: 5px 12px; border-radius: 20px;
+            margin-top: 10px; text-align: center; letter-spacing: 1px;
+        `;
+        badge.innerHTML = 'YOU ARE IN QUEUE';
+        btn.parentNode.insertBefore(badge, btn.nextSibling);
+    }
+}
+
+// Run on load
+initEmergencyBtn();
 }
 
 function loadProducts() {
@@ -182,6 +228,7 @@ function showToast(message, type = 'info') {
         toast.style.background = '#14283e';
         toast.style.borderColor = 'gold';
     }
+    
     
     setTimeout(() => {
         toast.style.opacity = '0';

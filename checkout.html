@@ -449,16 +449,39 @@
             };
 
             localStorage.setItem('currentOrder', JSON.stringify(order));
-            localStorage.setItem('cart', '[]');
-            
-            showToast('✓ Order placed! Redirecting to drone tracking...', 'success');
-            setTimeout(() => {
-                window.location.href = 'tracking.html';
-            }, 1500);
-        }
+localStorage.setItem('cart', '[]');
 
-        // Load checkout on page load
-        loadCheckout();
+// Clear emergency so button resets after delivery
+localStorage.removeItem('emergency_activated');
+localStorage.removeItem('queue_priority');
+
+showToast('✓ Order placed! Redirecting to drone tracking...', 'success');
+setTimeout(() => {
+    window.location.href = 'tracking.html';
+}, 1500);
+        }
+        function initEmergencyBtn() {
+    const btn = document.getElementById('emergencyBtn');
+    if (!btn) return;
+
+    // If already clicked before, disable immediately
+    if (localStorage.getItem('emergency_activated')) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-check"></i> PRIORITY ACTIVATED';
+        return;
+    }
+
+    btn.addEventListener('click', function () {
+        localStorage.setItem('emergency_activated', 'true');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-check"></i> PRIORITY ACTIVATED';
+    });
+}
+
+loadCheckout();
+initEmergencyBtn();
+
+
     </script>
 </body>
 </html>

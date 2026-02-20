@@ -538,6 +538,10 @@
                 alert('✓ Delivery Complete!\n\nYour medicine has been delivered by drone. Thank you for using MedDrone Connect!');
             }, 1000);
         }
+        function onDeliveryComplete() {
+    localStorage.removeItem('emergency_activated');
+    localStorage.removeItem('queue_priority');
+}
 
         // Initialize on page load
         initTracking();
