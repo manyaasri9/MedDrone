@@ -5,13 +5,20 @@
     font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
 }
 
+/* body {
+    background: linear-gradient(145deg, #f0f5fe 0%, #e6edf9 100%);
+    min-height: 100vh;
+    padding: 20px 16px 40px;
+} */
 body {
     background: linear-gradient(145deg, #f0f5fe 0%, #e6edf9 100%);
     min-height: 100vh;
     padding: 20px 16px 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Main Container */
 .demo-container {
     max-width: 1300px;
     width: 100%;
@@ -24,6 +31,21 @@ body {
     overflow: hidden;
     border: 1px solid rgba(255,255,255,0.6);
 }
+
+/* Main Container */
+/* .demo-container {
+    max-width: 1300px;
+    margin: 80px auto 0;
+    width: 100%;
+   
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 48px 48px 36px 36px;
+    box-shadow: 0 20px 40px rgba(0,20,50,0.15), 0 8px 24px rgba(0,40,100,0.1);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.6);
+} */
 
 /* Top Bar */
 .top-bar {
