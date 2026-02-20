@@ -1,229 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MedDrone — Drone Medicine Delivery</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<script src="main.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedDrone Connect · AI-Powered Medical Delivery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<div class="hero-bg"></div>
-<div class="grid-overlay"></div>
-
-<!-- NAV -->
-<nav>
-  <div class="logo">Medi<span>Drop</span></div>
-  <div class="nav-links">
-    <button class="nav-btn active" id="nav-signin" onclick="showPage('signin')">Sign In</button>
-    <!-- <button class="nav-btn inactive" id="nav-medicine" onclick="showPage('medicine')">Medicine</button>
-    <button class="nav-btn inactive" id="nav-checkout" onclick="showPage('checkout')">Checkout</button>
-    <button class="nav-btn drone-btn inactive" id="nav-drone" onclick="showPage('drone')">🚁 Drone Cam</button> -->
-  </div>
-</nav>
-
-<!-- PAGE 1: SIGN IN -->
-<div class="page active" id="page-signin">
-  <div class="signin-container">
-    <div class="signin-header">
-      <h1>Welcome to<br><span>MedDrone</span></h1>
-      <p>Fast, safe drone medicine delivery at your doorstep</p>
-    </div>
-    <div class="signin-card">
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" id="emailInput" placeholder="you@example.com">
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="passInput" placeholder="••••••••">
-      </div>
-      <button class="btn-primary" onclick="doSignIn()">Sign In → Get Medicine</button>
-      </button>
-</div>
-
-<!-- PAGE 2: MEDICINE -->
-<div class="page" id="page-medicine">
-  <div class="page-header">
-    <h2>Browse Medicines</h2>
-    <p>All products delivered by drone within 30 minutes</p>
-  </div>
-  <div class="search-bar">
-    <input type="text" placeholder="🔍  Search for medicine, vitamins, supplements..." id="searchInput" oninput="filterMeds()">
-  </div>
-  <div class="categories">
-    <button class="cat-btn active" onclick="filterCat('all', this)">All</button>
-    <button class="cat-btn" onclick="filterCat('pain', this)">Pain Relief</button>
-    <button class="cat-btn" onclick="filterCat('vitamin', this)">Vitamins</button>
-    <button class="cat-btn" onclick="filterCat('cold', this)">Cold & Flu</button>
-    <button class="cat-btn" onclick="filterCat('heart', this)">Heart Health</button>
-    <button class="cat-btn" onclick="filterCat('digestive', this)">Digestive</button>
-  </div>
-  <div class="medicine-grid" id="medicineGrid"></div>
-
-  <div class="cart-bar" id="cartBar">
-    <div class="cart-info"><span id="cartCount">0</span> items · <span id="cartTotal">$0.00</span></div>
-    <button class="checkout-btn" onclick="showPage('checkout')">Checkout →</button>
-  </div>
-</div>
-
-<!-- PAGE 3: CHECKOUT -->
-<div class="page" id="page-checkout">
-  <div class="page-header">
-    <h2>Checkout</h2>
-    <p>Complete your drone medicine delivery</p>
-  </div>
-  <div class="checkout-grid">
-    <div class="checkout-left">
-      <div class="checkout-card">
-        <h3>📍 Delivery Address</h3>
-        <div class="form-row">
-          <input class="checkout-input" placeholder="First Name" value="Alex">
-          <input class="checkout-input" placeholder="Last Name" value="Johnson">
+    <div class="demo-container">
+        <!-- Header -->
+        <div class="top-bar">
+            <div class="brand">
+                <span class="logo"><i class="fas fa-helicopter"></i> MedDrone Connect</span>
+            </div>
+            <div class="header-actions">
+                <a href="signin.html" class="sign-in-link"><i class="fas fa-user"></i> Sign In</a>
+                <a href="checkout.html" class="cart-link" id="cartLink">
+                    <i class="fas fa-shopping-cart"></i> Cart <span class="cart-count" id="cartCount">0</span>
+                </a>
+            </div>
         </div>
-        <input class="checkout-input" style="width:100%" placeholder="Street Address" value="123 Health Street">
-        <div class="form-row">
-          <input class="checkout-input" placeholder="City" value="Vancouver">
-          <input class="checkout-input" placeholder="Postal Code" value="V5K 1A1">
-        </div>
-        <input class="checkout-input" style="width:100%" placeholder="Delivery Instructions (optional)" value="Leave at front door">
-      </div>
 
-      <div class="checkout-card">
-        <h3>🚁 Delivery Method</h3>
-        <div class="delivery-options">
-          <div class="delivery-opt selected" onclick="selectDelivery(this, 'Express Drone', 4.99)">
-            <div class="opt-icon">🚁</div>
-            <div class="opt-name">Express Drone</div>
-            <div class="opt-time">15–30 min</div>
-            <div class="opt-price">$4.99</div>
-          </div>
-          <div class="delivery-opt" onclick="selectDelivery(this, 'Priority Drone', 9.99)">
-            <div class="opt-icon">⚡</div>
-            <div class="opt-name">Priority Drone</div>
-            <div class="opt-time">Under 15 min</div>
-            <div class="opt-price">$9.99</div>
-          </div>
+        <!-- Location + Search -->
+        <div class="location-row">
+            <div class="deliver-to"><i class="fas fa-location-dot"></i> Deliver to <span id="location">Vancouver, V6B 1A1</span></div>
+            <div class="search-box">
+                <i class="fas fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="Search for medicines, emergencies, tests...">
+            </div>
         </div>
-      </div>
 
-      <div class="checkout-card">
-        <h3>💳 Payment</h3>
-        <input class="checkout-input" style="width:100%" placeholder="Card Number" value="4242 4242 4242 4242">
-        <div class="form-row">
-          <input class="checkout-input" placeholder="Expiry MM/YY" value="12/28">
-          <input class="checkout-input" placeholder="CVV" value="•••">
+        <!-- Categories -->
+        <div class="categories">
+            <span class="category-item active-cat" data-category="all"><i class="fas fa-tablets"></i> All</span>
+            <span class="category-item" data-category="medicine"><i class="fas fa-pills"></i> Medicine</span>
+            <span class="category-item" data-category="emergency"><i class="fas fa-first-aid"></i> Emergency Kit</span>
+            <span class="category-item" data-category="wellness"><i class="fas fa-leaf"></i> Wellness</span>
+            <span class="category-item" data-category="vitamins"><i class="fas fa-capsules"></i> Vitamins</span>
         </div>
-        <input class="checkout-input" style="width:100%" placeholder="Name on Card" value="Alex Johnson">
-      </div>
+
+        <!-- Main Content: Products + Emergency Panel -->
+        <div class="main-content">
+            <!-- Product Grid -->
+            <div class="product-grid" id="productGrid">
+                <!-- Products will be dynamically loaded -->
+            </div>
+
+            <!-- Emergency Panel -->
+            <div class="emergency-panel">
+                <div class="emergency-header">
+                    <i class="fas fa-circle-exclamation"></i>
+                    <h3>EMERGENCY<br>PRIORITY</h3>
+                </div>
+                <div class="emergency-desc">
+                    <i class="fas fa-tower-broadcast"></i> Urgent medical delivery needed? Activate priority queue for immediate drone dispatch.
+                </div>
+                <button class="emergency-button" id="emergencyBtn">
+                    <i class="fas fa-bolt"></i> EMERGENCY <i class="fas fa-helicopter"></i>
+                </button>
+                <p style="font-size:0.9rem; color:#ba2d2d; margin-top: 10px;">
+                    <i class="fas fa-syringe"></i> Activates priority dispatch & AI rerouting
+                </p>
+
+                <!-- Priority Queue Widget -->
+                <div class="priority-queue">
+                    <i class="fas fa-list-ol"></i> Priority Queue
+                    <div class="queue-badge" id="queueCount">
+                        <i class="fas fa-heart-circle-plus"></i> <span id="queueNumber">0</span> active
+                    </div>
+                    <p style="font-size:0.8rem; margin-top:12px; opacity:0.9;" id="queueStatus">
+                        <i class="fas fa-check-circle"></i> System ready
+                    </p>
+                </div>
+                <p style="margin-top:14px; font-size:0.9rem; background: #ebf3ff; border-radius:30px; padding:8px;">
+                    <i class="fas fa-satellite-dish"></i> AI: All systems operational
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="footer-info">
+            <span><i class="fas fa-robot"></i> AI autopilot · obstacle avoidance</span>
+            <span><i class="fas fa-battery-bolt"></i> sustainable energy optimized</span>
+            <span><i class="fas fa-helicopter"></i> fast delivery from the sky</span>
+        </div>
     </div>
 
-    <div class="order-summary">
-      <div class="checkout-card">
-        <h3>🧾 Order Summary</h3>
-        <div class="order-items" id="orderItems">
-          <div style="color: var(--muted); font-size: 0.9rem;">No items in cart.</div>
-        </div>
-        <div class="order-totals">
-          <div class="total-row"><span>Subtotal</span><span id="subtotalVal">$0.00</span></div>
-          <div class="total-row"><span>Drone Delivery</span><span id="deliveryVal">$4.99</span></div>
-          <div class="total-row"><span>Tax (5%)</span><span id="taxVal">$0.00</span></div>
-          <div class="total-row final"><span>Total</span><span id="grandTotal">$4.99</span></div>
-        </div>
-        <button class="place-order-btn" onclick="placeOrder()">🚁 Launch Drone Order</button>
-      </div>
-    </div>
-  </div>
-</div>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast-msg"></div>
 
-<!-- PAGE 4: DRONE CAMERA -->
-<div class="page" id="page-drone">
-  <div class="drone-header">
-    <h2>🚁 Drone Live Camera</h2>
-    <p><span class="drone-status-dot"></span>Drone #MD-47 — Active & En Route</p>
-  </div>
-  <div class="drone-layout">
-    <div>
-      <div class="camera-feed" id="cameraFeed">
-        <div class="camera-placeholder" id="cameraPlaceholder">
-          <div class="drone-anim">🚁</div>
-          <h3>Drone Camera Offline</h3>
-          <p>Click "Connect Camera" to view the live drone feed from your device camera</p>
-        </div>
-        <video id="cameraVideo" autoplay playsinline muted></video>
-        <div class="hud-overlay">
-          <div class="hud-corner tl"></div>
-          <div class="hud-corner tr"></div>
-          <div class="hud-corner bl"></div>
-          <div class="hud-corner br"></div>
-          <div class="hud-center">
-            <div class="crosshair-h"></div>
-            <div class="crosshair-v"></div>
-            <div class="crosshair-dot"></div>
-          </div>
-          <div class="hud-info">
-            <span class="hud-stat" id="hudAlt">ALT: 42m</span>
-            <span class="hud-stat" id="hudSpeed">SPD: 28km/h</span>
-            <span class="hud-stat" id="hudBat">BAT: 78%</span>
-            <span class="hud-stat" id="hudEta">ETA: 4min</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="camera-controls">
-        <button class="ctrl-btn primary" id="connectBtn" onclick="connectCamera()">📷 Connect Camera</button>
-        <button class="ctrl-btn" id="snapBtn" onclick="takeSnapshot()" disabled>📸 Snapshot</button>
-        <button class="ctrl-btn" id="stopBtn" onclick="stopCamera()" style="display:none">⛔ Disconnect</button>
-        <button class="ctrl-btn" onclick="showPage('checkout')">← Back to Checkout</button>
-      </div>
-    </div>
-
-    <div class="drone-stats">
-      <div class="stat-card">
-        <h4>Battery Level</h4>
-        <div class="stat-value">78<span class="stat-unit">%</span></div>
-        <div class="stat-bar"><div class="stat-fill" id="batBar" style="width:78%; background: linear-gradient(90deg,#34d399,#00C9A7)"></div></div>
-      </div>
-      <div class="stat-card">
-        <h4>Altitude</h4>
-        <div class="stat-value">42<span class="stat-unit"> m</span></div>
-        <div class="stat-bar"><div class="stat-fill" id="altBar" style="width:42%"></div></div>
-      </div>
-      <div class="stat-card">
-        <h4>Speed</h4>
-        <div class="stat-value">28<span class="stat-unit"> km/h</span></div>
-        <div class="stat-bar"><div class="stat-fill" id="spdBar" style="width:56%"></div></div>
-      </div>
-      <div class="stat-card">
-        <h4>Distance to Drop</h4>
-        <div class="stat-value">1.8<span class="stat-unit"> km</span></div>
-        <div class="stat-bar"><div class="stat-fill" id="distBar" style="width:36%; background: linear-gradient(90deg, #38bdf8, #818cf8)"></div></div>
-      </div>
-      <div class="stat-card">
-        <h4>Signal Strength</h4>
-        <div class="stat-value">5<span class="stat-unit">/5 bars</span></div>
-        <div class="stat-bar"><div class="stat-fill" style="width:100%"></div></div>
-      </div>
-      <div class="stat-card">
-        <h4>Temperature</h4>
-        <div class="stat-value">22<span class="stat-unit"> °C</span></div>
-        <div class="stat-bar"><div class="stat-fill" style="width:44%; background: linear-gradient(90deg,#fb923c,#f87171)"></div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- SUCCESS MODAL -->
-<div class="modal-overlay" id="successModal">
-  <div class="modal">
-    <div class="success-icon">✅</div>
-    <h2>Order Launched!</h2>
-    <p>Your medicine is loaded and the drone is on its way. Track it live on our drone camera.</p>
-    <div class="drone-track">🚁 Drone #MD-47 dispatched · ETA: 18 minutes</div>
-    <button class="btn-primary" onclick="goToDrone()">Watch Drone Live →</button>
-  </div>
-</div>
+    <script src="app.js"></script>
 </body>
 </html>
