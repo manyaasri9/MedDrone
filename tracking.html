@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Drone Tracking · MedDrone Connect</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
     <link rel="stylesheet" href="styles.css">
     <style>
         .tracking-container {
@@ -62,52 +64,21 @@
             padding: 30px;
             box-shadow: 0 4px 16px rgba(0,20,50,0.1);
             min-height: 600px;
+            overflow: hidden;
         }
 
-        .map-container {
+        #mapContainer {
             width: 100%;
             height: 500px;
-            background: linear-gradient(135deg, #e6f3ff 0%, #cce6ff 100%);
             border-radius: 20px;
             position: relative;
             overflow: hidden;
-            border: 3px solid #004e9e;
-        }
-
-        .drone-icon {
-            position: absolute;
-            font-size: 3rem;
-            color: #004e9e;
-            transition: all 0.5s ease;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
-            animation: float 2s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(5deg); }
-        }
-
-        .destination-marker {
-            position: absolute;
-            font-size: 2.5rem;
-            color: #2d6a4f;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
-        }
-
-        .origin-marker {
-            position: absolute;
-            font-size: 2.5rem;
-            color: #ff5e5e;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
-        }
-
-        .flight-path {
-            position: absolute;
-            width: 4px;
-            background: rgba(0, 78, 158, 0.3);
-            transform-origin: top left;
+            border: none;
             z-index: 1;
+        }
+
+        .leaflet-container {
+            border-radius: 20px;
         }
 
         .info-panel {
@@ -206,6 +177,7 @@
             font-size: 1.2rem;
             background: #e6edf9;
             color: #6b7a99;
+            flex-shrink: 0;
         }
 
         .timeline-item.active .timeline-icon {
@@ -261,6 +233,12 @@
             font-size: 0.95rem;
         }
 
+        .timer {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #004e9e;
+        }
+
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -279,6 +257,11 @@
             background: #004e9e;
             color: white;
         }
+
+        /* Leaflet map styling */
+        .leaflet-routing-container {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -290,7 +273,7 @@
         <div class="tracking-header">
             <div>
                 <h1><i class="fas fa-satellite-dish"></i> Live Drone Tracking</h1>
-                <p style="color: #6b7a99; margin-top: 5px;">Real-time AI-powered delivery in progress</p>
+                <p style="color: #6b7a99; margin-top: 5px;">Real-time GPS-tracked delivery in progress</p>
             </div>
             <div class="status-badge" id="statusBadge">
                 <i class="fas fa-helicopter"></i> <span id="statusText">In Transit</span>
@@ -300,11 +283,9 @@
         <div class="tracking-content">
             <div class="map-section">
                 <h3 style="color: #1f3a5f; margin-bottom: 20px;">
-                    <i class="fas fa-map"></i> Flight Path
+                    <i class="fas fa-map"></i> Route Map - ETA: <span class="timer" id="timer">14:00</span>
                 </h3>
-                <div class="map-container" id="mapContainer">
-                    <!-- Drone and markers will be positioned here -->
-                </div>
+                <div id="mapContainer"></div>
             </div>
 
             <div class="info-panel">
@@ -346,12 +327,12 @@
         </div>
     </div>
 
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
     <script>
         let progress = 0;
-        let droneX = 10;
-        let droneY = 50;
-        const destinationX = 85;
-        const destinationY = 45;
+        let currentCoords = null;
+        let allCoords = [];
 
         const statuses = [
             { icon: 'fa-box', title: 'Order Confirmed', time: 'Just now', completed: true },
@@ -361,12 +342,21 @@
             { icon: 'fa-check-circle', title: 'Delivered', time: 'Pending', active: false }
         ];
 
+        // Medicine warehouse in Vancouver (SFU area)
+        const store = { lat: 49.25284, lng: -122.89639 };
+        let home = { lat: 49.277748, lng: -122.909050 };
+
         function initTracking() {
             const order = JSON.parse(localStorage.getItem('currentOrder'));
             
             if (!order) {
                 window.location.href = 'index.html';
                 return;
+            }
+
+            // Update home coordinates if delivery location is provided
+            if (order.delivery && order.delivery.lat && order.delivery.lng) {
+                home = { lat: order.delivery.lat, lng: order.delivery.lng };
             }
 
             // Display delivery info
@@ -390,59 +380,92 @@
                 </div>
             `;
 
-            // Setup map
+            // Setup map with Leaflet
             setupMap();
 
             // Setup timeline
             updateTimeline();
 
-            // Start simulation
+            // Start delivery simulation
             startDeliverySimulation();
         }
 
         function setupMap() {
-            const mapContainer = document.getElementById('mapContainer');
-            
-            // Origin marker
-            const origin = document.createElement('div');
-            origin.className = 'origin-marker';
-            origin.innerHTML = '<i class="fas fa-warehouse"></i>';
-            origin.style.left = '10%';
-            origin.style.top = '50%';
-            origin.style.transform = 'translate(-50%, -50%)';
-            mapContainer.appendChild(origin);
+            // Initialize map
+            var map = L.map('mapContainer').setView([store.lat, store.lng], 14);
 
-            // Destination marker
-            const destination = document.createElement('div');
-            destination.className = 'destination-marker';
-            destination.innerHTML = '<i class="fas fa-map-marker-alt"></i>';
-            destination.style.left = '85%';
-            destination.style.top = '45%';
-            destination.style.transform = 'translate(-50%, -50%)';
-            mapContainer.appendChild(destination);
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
 
-            // Flight path line
-            const path = document.createElement('div');
-            path.className = 'flight-path';
-            path.id = 'flightPath';
-            path.style.left = '10%';
-            path.style.top = '50%';
-            mapContainer.appendChild(path);
+            // Custom drone icon
+            var droneIcon = L.icon({
+                iconUrl: "https://cdn-icons-png.flaticon.com/512/61/61205.png",
+                iconSize: [40, 40],
+                iconAnchor: [20, 20]
+            });
 
-            // Drone icon
-            const drone = document.createElement('div');
-            drone.className = 'drone-icon';
-            drone.id = 'drone';
-            drone.innerHTML = '<i class="fas fa-helicopter"></i>';
-            drone.style.left = '10%';
-            drone.style.top = '50%';
-            drone.style.transform = 'translate(-50%, -50%)';
-            mapContainer.appendChild(drone);
+            // Create drone marker starting at warehouse
+            var droneMarker = L.marker([store.lat, store.lng], { icon: droneIcon }).addTo(map);
+
+            // Add warehouse marker (red)
+            var warehouseIcon = L.divIcon({
+                html: '<i class="fas fa-warehouse" style="font-size: 32px; color: #ff5e5e; text-shadow: 0 2px 4px rgba(0,0,0,0.3); transform: translate(-50%, -50%);"></i>',
+                iconSize: [40, 40],
+                iconAnchor: [20, 20]
+            });
+            L.marker([store.lat, store.lng], { icon: warehouseIcon }).addTo(map);
+
+            // Add delivery location marker (green)
+            var locationIcon = L.divIcon({
+                html: '<i class="fas fa-map-marker-alt" style="font-size: 32px; color: #2d6a4f; text-shadow: 0 2px 4px rgba(0,0,0,0.3); transform: translate(-50%, -100%);"></i>',
+                iconSize: [40, 40],
+                iconAnchor: [20, 40]
+            });
+            L.marker([home.lat, home.lng], { icon: locationIcon }).addTo(map);
+
+            // Setup routing to get coordinates
+            var control = L.Routing.control({
+                waypoints: [
+                    L.latLng(store.lat, store.lng),
+                    L.latLng(home.lat, home.lng)
+                ],
+                lineOptions: {
+                    styles: [{ color: '#004e9e', opacity: 0.3, weight: 5 }]
+                },
+                createMarker: function() { return null; },
+                addWaypoints: false,
+                routeWhileDragging: false,
+                show: false
+            }).addTo(map);
+
+            // When route is found, animate the drone
+            control.on('routesfound', function(e) {
+                var coords = e.routes[0].coordinates;
+                allCoords = coords;
+                var totalSteps = coords.length;
+                var totalTime = 840000; // 14 minutes in milliseconds
+                var stepDuration = totalTime / totalSteps; // ms per step
+
+                // Store the animation function for use in simulation
+                window.animateDrone = function(percent) {
+                    var index = Math.min(Math.floor((percent / 100) * (totalSteps - 1)), totalSteps - 1);
+                    if (index < totalSteps) {
+                        currentCoords = coords[index];
+                        droneMarker.setLatLng([currentCoords.lat, currentCoords.lng]);
+                    }
+                };
+            });
+
+            // Fit bounds to show both locations
+            map.fitBounds([[store.lat, store.lng], [home.lat, home.lng]], {padding: [50, 50]});
         }
 
         function updateTimeline() {
             const timeline = document.getElementById('timeline');
-            timeline.innerHTML = statuses.map((status, index) => `
+            timeline.innerHTML = statuses.map((status) => `
                 <div class="timeline-item ${status.completed ? 'completed' : ''} ${status.active ? 'active' : ''}">
                     <div class="timeline-icon">
                         <i class="fas ${status.icon}"></i>
@@ -457,7 +480,7 @@
 
         function startDeliverySimulation() {
             const interval = setInterval(() => {
-                progress += 1.5;
+                progress += 0.12; // Complete in ~14 minutes (840 seconds = 84000 * 0.1 ms)
                 
                 if (progress > 100) {
                     progress = 100;
@@ -465,20 +488,10 @@
                     completeDelivery();
                 }
 
-                // Update drone position
-                droneX = 10 + (progress / 100) * 75;
-                droneY = 50 - (Math.sin(progress / 10) * 5); // Slight wave motion
-
-                const drone = document.getElementById('drone');
-                drone.style.left = droneX + '%';
-                drone.style.top = droneY + '%';
-
-                // Update flight path
-                const path = document.getElementById('flightPath');
-                const angle = Math.atan2(destinationY - 50, destinationX - 10) * 180 / Math.PI;
-                const distance = Math.sqrt(Math.pow(destinationX - 10, 2) + Math.pow(destinationY - 50, 2));
-                path.style.width = (distance * progress / 100) + '%';
-                path.style.transform = `rotate(${angle}deg)`;
+                // Update drone position via Leaflet
+                if (window.animateDrone) {
+                    window.animateDrone(progress);
+                }
 
                 // Update progress bar
                 document.getElementById('progressBar').style.width = progress + '%';
@@ -488,7 +501,7 @@
                 updateAIStatus();
                 updateStatusTimeline();
 
-            }, 100);
+            }, 500); // Update every 500ms
         }
 
         function updateAIStatus() {
@@ -539,8 +552,27 @@
             }, 1000);
         }
 
+        // Countdown timer
+        function startTimer(duration) {
+            let timeLeft = duration;
+            const timerEl = document.getElementById("timer");
+
+            const countdown = setInterval(() => {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                timerEl.textContent = `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    timerEl.textContent = "Arrived!";
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
         // Initialize on page load
         initTracking();
+        startTimer(14 * 60); // 14 minutes
     </script>
 </body>
 </html>
