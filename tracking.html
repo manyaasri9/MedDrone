@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Drone Tracking · MedDrone Connect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .tracking-container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .tracking-header {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 16px rgba(0,20,50,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .tracking-header h1 {
+            color: #1f3a5f;
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .tracking-header .status-badge {
+            background: #2d6a4f;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tracking-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 968px) {
+            .tracking-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .map-section {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 4px 16px rgba(0,20,50,0.1);
+            min-height: 600px;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 500px;
+            background: linear-gradient(135deg, #e6f3ff 0%, #cce6ff 100%);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #004e9e;
+        }
+
+        .drone-icon {
+            position: absolute;
+            font-size: 3rem;
+            color: #004e9e;
+            transition: all 0.5s ease;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+            animation: float 2s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        .destination-marker {
+            position: absolute;
+            font-size: 2.5rem;
+            color: #2d6a4f;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
+
+        .origin-marker {
+            position: absolute;
+            font-size: 2.5rem;
+            color: #ff5e5e;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
+
+        .flight-path {
+            position: absolute;
+            width: 4px;
+            background: rgba(0, 78, 158, 0.3);
+            transform-origin: top left;
+            z-index: 1;
+        }
+
+        .info-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 4px 16px rgba(0,20,50,0.1);
+        }
+
+        .info-card h3 {
+            color: #1f3a5f;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e6edf9;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-item-label {
+            color: #6b7a99;
+            font-weight: 600;
+        }
+
+        .info-item-value {
+            color: #1f3a5f;
+            font-weight: 700;
+        }
+
+        .progress-section {
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e6edf9;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #004e9e, #0066cc);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            box-shadow: 0 2px 8px rgba(0, 78, 158, 0.3);
+        }
+
+        .status-timeline {
+            margin-top: 20px;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-left: 3px solid #e6edf9;
+            padding-left: 20px;
+            margin-left: 10px;
+        }
+
+        .timeline-item.active {
+            border-left-color: #004e9e;
+        }
+
+        .timeline-item.completed {
+            border-left-color: #2d6a4f;
+        }
+
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background: #e6edf9;
+            color: #6b7a99;
+        }
+
+        .timeline-item.active .timeline-icon {
+            background: #004e9e;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .timeline-item.completed .timeline-icon {
+            background: #2d6a4f;
+            color: white;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .timeline-text {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-weight: 700;
+            color: #1f3a5f;
+            margin-bottom: 4px;
+        }
+
+        .timeline-time {
+            font-size: 0.85rem;
+            color: #6b7a99;
+        }
+
+        .ai-status {
+            background: linear-gradient(135deg, #ecf3ff, #d6e7ff);
+            border-left: 4px solid #004e9e;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .ai-status-title {
+            font-weight: 700;
+            color: #004e9e;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-status-text {
+            color: #1f3a5f;
+            font-size: 0.95rem;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #004e9e;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border: 2px solid #004e9e;
+            border-radius: 25px;
+            transition: all 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            background: #004e9e;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="tracking-container">
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="tracking-header">
+            <div>
+                <h1><i class="fas fa-satellite-dish"></i> Live Drone Tracking</h1>
+                <p style="color: #6b7a99; margin-top: 5px;">Real-time AI-powered delivery in progress</p>
+            </div>
+            <div class="status-badge" id="statusBadge">
+                <i class="fas fa-helicopter"></i> <span id="statusText">In Transit</span>
+            </div>
+        </div>
+
+        <div class="tracking-content">
+            <div class="map-section">
+                <h3 style="color: #1f3a5f; margin-bottom: 20px;">
+                    <i class="fas fa-map"></i> Flight Path
+                </h3>
+                <div class="map-container" id="mapContainer">
+                    <!-- Drone and markers will be positioned here -->
+                </div>
+            </div>
+
+            <div class="info-panel">
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle"></i> Delivery Info</h3>
+                    <div id="deliveryInfo">
+                        <!-- Will be populated from order -->
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-tasks"></i> Delivery Progress</h3>
+                    <div class="progress-section">
+                        <div class="info-item">
+                            <span class="info-item-label">Progress</span>
+                            <span class="info-item-value" id="progressPercent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="status-timeline" id="timeline">
+                        <!-- Timeline items will be added here -->
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-robot"></i> AI Status</h3>
+                    <div class="ai-status">
+                        <div class="ai-status-title">
+                            <i class="fas fa-brain"></i> Autonomous Flight System
+                        </div>
+                        <div class="ai-status-text" id="aiStatus">
+                            Calculating optimal route...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let progress = 0;
+        let droneX = 10;
+        let droneY = 50;
+        const destinationX = 85;
+        const destinationY = 45;
+
+        const statuses = [
+            { icon: 'fa-box', title: 'Order Confirmed', time: 'Just now', completed: true },
+            { icon: 'fa-helicopter', title: 'Drone Launched', time: 'Just now', completed: true },
+            { icon: 'fa-route', title: 'In Transit', time: 'In progress', active: true },
+            { icon: 'fa-map-marker-alt', title: 'Approaching Destination', time: 'Pending', active: false },
+            { icon: 'fa-check-circle', title: 'Delivered', time: 'Pending', active: false }
+        ];
+
+        function initTracking() {
+            const order = JSON.parse(localStorage.getItem('currentOrder'));
+            
+            if (!order) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Display delivery info
+            const deliveryInfo = document.getElementById('deliveryInfo');
+            deliveryInfo.innerHTML = `
+                <div class="info-item">
+                    <span class="info-item-label">Recipient</span>
+                    <span class="info-item-value">${order.delivery.name}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-item-label">Address</span>
+                    <span class="info-item-value">${order.delivery.address}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-item-label">City</span>
+                    <span class="info-item-value">${order.delivery.city}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-item-label">Items</span>
+                    <span class="info-item-value">${order.items.length} item(s)</span>
+                </div>
+            `;
+
+            // Setup map
+            setupMap();
+
+            // Setup timeline
+            updateTimeline();
+
+            // Start simulation
+            startDeliverySimulation();
+        }
+
+        function setupMap() {
+            const mapContainer = document.getElementById('mapContainer');
+            
+            // Origin marker
+            const origin = document.createElement('div');
+            origin.className = 'origin-marker';
+            origin.innerHTML = '<i class="fas fa-warehouse"></i>';
+            origin.style.left = '10%';
+            origin.style.top = '50%';
+            origin.style.transform = 'translate(-50%, -50%)';
+            mapContainer.appendChild(origin);
+
+            // Destination marker
+            const destination = document.createElement('div');
+            destination.className = 'destination-marker';
+            destination.innerHTML = '<i class="fas fa-map-marker-alt"></i>';
+            destination.style.left = '85%';
+            destination.style.top = '45%';
+            destination.style.transform = 'translate(-50%, -50%)';
+            mapContainer.appendChild(destination);
+
+            // Flight path line
+            const path = document.createElement('div');
+            path.className = 'flight-path';
+            path.id = 'flightPath';
+            path.style.left = '10%';
+            path.style.top = '50%';
+            mapContainer.appendChild(path);
+
+            // Drone icon
+            const drone = document.createElement('div');
+            drone.className = 'drone-icon';
+            drone.id = 'drone';
+            drone.innerHTML = '<i class="fas fa-helicopter"></i>';
+            drone.style.left = '10%';
+            drone.style.top = '50%';
+            drone.style.transform = 'translate(-50%, -50%)';
+            mapContainer.appendChild(drone);
+        }
+
+        function updateTimeline() {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = statuses.map((status, index) => `
+                <div class="timeline-item ${status.completed ? 'completed' : ''} ${status.active ? 'active' : ''}">
+                    <div class="timeline-icon">
+                        <i class="fas ${status.icon}"></i>
+                    </div>
+                    <div class="timeline-text">
+                        <div class="timeline-title">${status.title}</div>
+                        <div class="timeline-time">${status.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function startDeliverySimulation() {
+            const interval = setInterval(() => {
+                progress += 1.5;
+                
+                if (progress > 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    completeDelivery();
+                }
+
+                // Update drone position
+                droneX = 10 + (progress / 100) * 75;
+                droneY = 50 - (Math.sin(progress / 10) * 5); // Slight wave motion
+
+                const drone = document.getElementById('drone');
+                drone.style.left = droneX + '%';
+                drone.style.top = droneY + '%';
+
+                // Update flight path
+                const path = document.getElementById('flightPath');
+                const angle = Math.atan2(destinationY - 50, destinationX - 10) * 180 / Math.PI;
+                const distance = Math.sqrt(Math.pow(destinationX - 10, 2) + Math.pow(destinationY - 50, 2));
+                path.style.width = (distance * progress / 100) + '%';
+                path.style.transform = `rotate(${angle}deg)`;
+
+                // Update progress bar
+                document.getElementById('progressBar').style.width = progress + '%';
+                document.getElementById('progressPercent').textContent = Math.round(progress) + '%';
+
+                // Update status messages
+                updateAIStatus();
+                updateStatusTimeline();
+
+            }, 100);
+        }
+
+        function updateAIStatus() {
+            const aiStatus = document.getElementById('aiStatus');
+            const messages = [
+                'Calculating optimal route...',
+                'Avoiding obstacles...',
+                'Monitoring weather conditions...',
+                'Optimizing battery usage...',
+                'Adjusting flight path...',
+                'Approaching destination...'
+            ];
+            
+            const messageIndex = Math.floor(progress / 20);
+            if (messageIndex < messages.length) {
+                aiStatus.textContent = messages[messageIndex];
+            }
+        }
+
+        function updateStatusTimeline() {
+            if (progress > 20 && !statuses[2].completed) {
+                statuses[2].completed = true;
+                statuses[2].active = false;
+                statuses[3].active = true;
+                updateTimeline();
+            }
+            if (progress > 70 && !statuses[3].completed) {
+                statuses[3].completed = true;
+                statuses[3].active = false;
+                statuses[4].active = true;
+                updateTimeline();
+            }
+        }
+
+        function completeDelivery() {
+            statuses[4].completed = true;
+            statuses[4].active = false;
+            statuses[4].time = 'Just now';
+            updateTimeline();
+
+            document.getElementById('statusText').textContent = 'Delivered';
+            document.getElementById('statusBadge').style.background = '#2d6a4f';
+            
+            document.getElementById('aiStatus').textContent = 'Delivery completed successfully!';
+
+            setTimeout(() => {
+                alert('✓ Delivery Complete!\n\nYour medicine has been delivered by drone. Thank you for using MedDrone Connect!');
+            }, 1000);
+        }
+
+        // Initialize on page load
+        initTracking();
+    </script>
+</body>
+</html>
