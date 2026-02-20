@@ -299,6 +299,21 @@
         }
 
         function loadCheckout() {
+            // Check if user is signed in
+            const user = localStorage.getItem('user');
+            if (!user) {
+                const checkoutContent = document.getElementById('checkoutContent');
+                checkoutContent.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-user-lock"></i>
+                        <h2>Please Sign In</h2>
+                        <p>You need to sign in to proceed with checkout</p>
+                        <a href="signin.html" class="back-to-shop">Sign In Now</a>
+                    </div>
+                `;
+                return;
+            }
+
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
             const checkoutContent = document.getElementById('checkoutContent');
 
